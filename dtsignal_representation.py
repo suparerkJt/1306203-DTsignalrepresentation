@@ -310,21 +310,7 @@ html = r"""
                 </label>
             </div>
 
-            <div class="subhead">Amplitude axis</div>
-            <div class="seg">
-                <div id="y_auto" class="active">Auto scale</div>
-                <div id="y_fixed">Fixed values</div>
-            </div>
-            <div class="grid2">
-                <label>Min amplitude
-                    <input id="ymin" type="number" value="-1" step="0.5" disabled>
-                </label>
-                <label>Max amplitude
-                    <input id="ymax" type="number" value="1" step="0.5" disabled>
-                </label>
-            </div>
-
-            <div class="hint">Auto scale fits the axes to the components. The boxes show the range currently used. Fixed index range: integers, at most 500 samples.</div>
+            <div class="hint">The index axis can be fitted automatically or set by hand (integers, at most 500 samples). The amplitude axis always fits the signal x[n] automatically.</div>
         </div>
 
     </div>
@@ -350,7 +336,7 @@ const MAXC=12;                       // largest number of components
 const comps=[];                      // {id, k, a, c}
 let nextId=1, nextColor=0;
 
-const view={auto_n:true, auto_y:true, nmin:-5, nmax:5, ymin:-1, ymax:1};
+const view={auto_n:true, nmin:-5, nmax:5};
 
 // one colour per component (light / dark theme)
 const PALETTE={
@@ -376,10 +362,8 @@ function addComp(k,a){
     comps.push({id:nextId++,k:k,a:a,c:nextColor++});
 }
 
-// start with three example components
-addComp(-1,0.5);
+// start with a single component:  a_0 · δ[n − 0]
 addComp(0,1);
-addComp(2,-1.5);
 
 // ======================================
 // TEXT
@@ -580,7 +564,7 @@ addBtn.addEventListener("click",()=>{
 // PLOT AREA SETTINGS
 // ======================================
 
-const nminIn=$("#nmin"), nmaxIn=$("#nmax"), yminIn=$("#ymin"), ymaxIn=$("#ymax");
+const nminIn=$("#nmin"), nmaxIn=$("#nmax");
 
 function setModeN(auto){
     view.auto_n=auto;
@@ -591,19 +575,8 @@ function setModeN(auto){
     render();
 }
 
-function setModeY(auto){
-    view.auto_y=auto;
-    $("#y_auto").classList.toggle("active",auto);
-    $("#y_fixed").classList.toggle("active",!auto);
-    yminIn.disabled=auto;
-    ymaxIn.disabled=auto;
-    render();
-}
-
 $("#n_auto").addEventListener("click",()=>setModeN(true));
 $("#n_fixed").addEventListener("click",()=>setModeN(false));
-$("#y_auto").addEventListener("click",()=>setModeY(true));
-$("#y_fixed").addEventListener("click",()=>setModeY(false));
 
 function applyN(){
 
@@ -626,23 +599,8 @@ function applyN(){
     render();
 }
 
-function applyY(){
-
-    const a=Number(yminIn.value), b=Number(ymaxIn.value);
-
-    if(!Number.isFinite(a)||!Number.isFinite(b)||b<=a){
-        yminIn.value=view.ymin; ymaxIn.value=view.ymax;
-        return;
-    }
-
-    view.ymin=a; view.ymax=b;
-    render();
-}
-
 nminIn.addEventListener("change",applyN);
 nmaxIn.addEventListener("change",applyN);
-yminIn.addEventListener("change",applyY);
-ymaxIn.addEventListener("change",applyY);
 
 // ======================================
 // THEME
@@ -760,13 +718,7 @@ function render(){
     }
     else{ nmin=view.nmin; nmax=view.nmax; }
 
-    if(view.auto_y){
-        [ymin,ymax]=autoAmpRange();
-        view.ymin=Number(ymin.toFixed(3));
-        view.ymax=Number(ymax.toFixed(3));
-        yminIn.value=view.ymin; ymaxIn.value=view.ymax;
-    }
-    else{ ymin=view.ymin; ymax=view.ymax; }
+    [ymin,ymax]=autoAmpRange();      // always fitted to x[n]
 
     // ----- geometry
     const L=68, R=W-24, T=44, B=H-52;
