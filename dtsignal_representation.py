@@ -290,7 +290,7 @@ html = r"""
             </div>
             <div id="list"></div>
             <div class="empty" id="empty">No components yet. Click “Add component”.</div>
-            <! <div class="hint" id="comphint">Each component is a<sub>k</sub>·δ[n − k]. The delay k is an integer; the amplitude a<sub>k</sub> is any real number. Components with the same k are stacked; the dashed ring marks their sum x[k].</div> >
+            
         </div>
 
         <div class="panel" id="card_axes">
