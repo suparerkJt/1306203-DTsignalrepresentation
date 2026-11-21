@@ -269,7 +269,7 @@ html = r"""
 <button class="theme" id="theme">🌙 DARK MODE</button>
 
 <h2>1306203 Signals & Systems: Representation by Delayed Impulses</h2>
-<div class="subtitle">Any discrete-time signal is a sum of scaled and delayed unit impulses</div>
+<div class="subtitle">Any discrete-time signal is a linear combination of unit impulses</div>
 
 <div class="eqbar">
     <div class="eq" id="eq"></div>
@@ -772,7 +772,7 @@ function render(){
     ctx.fillStyle=C.text;
     ctx.textAlign="left";
     ctx.font="bold 16px Arial";
-    ctx.fillText("x[n] = Σ aₖ δ[n − k]   (each colour = one component)",L,28);
+    ctx.fillText("x[n] = Σ aₖ δ[n − k] ",L,28);
 
     ctx.textAlign="center";
     ctx.font="14px Arial";
