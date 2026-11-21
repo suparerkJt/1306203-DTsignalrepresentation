@@ -310,7 +310,7 @@ html = r"""
                 </label>
             </div>
 
-            <div class="hint">The index axis can be fitted automatically or set by hand (integers, at most 500 samples). The amplitude axis always fits the signal x[n] automatically.</div>
+            
         </div>
 
     </div>
